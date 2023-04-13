@@ -1,11 +1,5 @@
-//
-//  SceneDelegate.swift
-//  foursquareClone
-//
-//  Created by Kadir Yasin Özmen on 12.04.2023.
-//
-
 import UIKit
+import ParseUI
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -13,9 +7,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
-        // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
-        // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
+
+        let user = PFUser.current()
+        if user != nil{
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let navigationVC = storyboard.instantiateViewController(identifier: "navigationVC") as? UINavigationController
+            window?.rootViewController = navigationVC
+        }
+        
         guard let _ = (scene as? UIWindowScene) else { return }
     }
 
