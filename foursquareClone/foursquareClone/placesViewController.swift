@@ -1,15 +1,10 @@
-//
-//  placesViewController.swift
-//  foursquareClone
-//
-//  Created by Kadir Yasin Özmen on 13.04.2023.
-//
-
 import UIKit
 import ParseUI
 
 class placesViewController: UIViewController, UITableViewDelegate,UITableViewDataSource {
     @IBOutlet weak var tableview: UITableView!
+    var placesNameArray = [String]()
+    var placesIdArray = [String]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -17,15 +12,43 @@ class placesViewController: UIViewController, UITableViewDelegate,UITableViewDat
         tableview.delegate = self
         
         navigationController?.navigationBar.topItem?.leftBarButtonItem = UIBarButtonItem(title: "Log Out", style: .plain, target: self, action: #selector(logOut))
+        getDataFromParse()
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        return placesNameArray.count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell()
+        var context = cell.defaultContentConfiguration()
+        context.text = placesNameArray[indexPath.row]
+        cell.contentConfiguration = context
         return cell
     }
     
+    func getDataFromParse(){
+        let query = PFQuery(className: "Places")
+        query.findObjectsInBackground { objects, error in
+            if error != nil{
+                self.makeAlert(error: "Error", message: error?.localizedDescription ?? "Error!!")
+            }else{
+                
+                self.placesNameArray.removeAll()
+                self.placesIdArray.removeAll()
+                
+                for object in objects!{
+                    if let placeName = object.object(forKey: "name") as? String{
+                        if let placeId = object.objectId as? String{
+                           
+                            self.placesNameArray.append(placeName)
+                            self.placesIdArray.append(placeId)
+                            
+                        }
+                    }
+                }
+                self.tableview.reloadData()
+            }
+        }
+    }
     @IBAction func addButton(_ sender: Any) {
         performSegue(withIdentifier: "addPlacesVC", sender: nil)
     }
