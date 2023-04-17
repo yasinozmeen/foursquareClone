@@ -5,6 +5,7 @@ class placesViewController: UIViewController, UITableViewDelegate,UITableViewDat
     @IBOutlet weak var tableview: UITableView!
     var placesNameArray = [String]()
     var placesIdArray = [String]()
+    var chooseID = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,6 +25,20 @@ class placesViewController: UIViewController, UITableViewDelegate,UITableViewDat
         cell.contentConfiguration = context
         return cell
     }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        chooseID = placesIdArray[indexPath.row]
+        performSegue(withIdentifier: "toDetails", sender: nil)
+        print(chooseID)
+    }
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        if segue.identifier == "toDetails"{
+            let destination = segue.destination as! detailsViewController
+            destination.id = self.chooseID
+            
+        }
+    }
+    
     
     func getDataFromParse(){
         let query = PFQuery(className: "Places")

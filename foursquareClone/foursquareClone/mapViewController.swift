@@ -53,21 +53,22 @@ class mapViewController: UIViewController,MKMapViewDelegate,CLLocationManagerDel
         object["name"] = placeModel.placeName
         object["type"] = placeModel.placeType
         object["descripton"] = placeModel.placeDescripton
-        object["latitude"] = placeModel.placeLatitude
-        object["longutude"] = placeModel.placeLongutde
+        object["latitude"] = self.choosenLatitude
+        object["longutude"] = self.choosenLangutude
         
         if let imageData = placeModel.placeImage.jpegData(compressionQuality: 0.5){
             object["image"] = PFFileObject(name: "image.jpg", data: imageData)
         }
         
-        object.saveInBackground { succes, error in
-            if error != nil{
+        object.saveInBackground { success, error in
+            if error != nil {
                 self.makeAlert(error: "Error", message: error?.localizedDescription ?? "Error!")
-            }else{
+            } else {
                 self.performSegue(withIdentifier: "fromMapVCtoPlacesVC", sender: nil)
             }
         }
     }
+ 
     @objc func back(){
         dismiss(animated: true)
     }
